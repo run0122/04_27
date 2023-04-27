@@ -8,14 +8,15 @@
 3 명
 
 # 개발환경
-Arduino IDE 2.1 라이브러리 버전
-Windows 10
-Python 3.11
-Visual Studio Code
-openCV 라이브러리
-YOLOv5 객체 탐지 모델
-웹캠
-Arduino Nano, L9110S 모터 드라이버
+- Arduino IDE 2.1 라이브러리 버전
+- Windows 10
+- Python 3.11
+- Visual Studio Code
+- PyCharm
+- openCV 라이브러리
+- YOLOv5 객체 탐지 모델
+- 웹캠
+- Arduino Nano, L9110S 모터 드라이버
 
 # 주요기능
 ## 1. 웹캠을 이용한 객체 탐지
