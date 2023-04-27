@@ -11,6 +11,11 @@ int IR_R_data;
 
 char input;
 
+const int trigPin = 7;
+const int echoPin = 6;
+
+float duration, distance;
+
 void setup() {
   pinMode(motor_A1, OUTPUT);
   pinMode(motor_A2, OUTPUT);
@@ -19,14 +24,25 @@ void setup() {
   pinMode(IR_L, INPUT);
   pinMode(IR_M, INPUT);
   pinMode(IR_R, INPUT);
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
   Serial.begin(9600);
 }
 
 void loop() {
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  duration = pulseIn(echoPin, HIGH);
+  distance = (duration*.0343)/2;
+
   IR_L_data = digitalRead(IR_L);
   IR_M_data = digitalRead(IR_M);
   IR_R_data = digitalRead(IR_R);
-  if (millis() == 5000) {
+  if (distance < 10) {
     turn();
   }
   if (Serial.available() > 0) {
