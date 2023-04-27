@@ -1,4 +1,4 @@
-onst int motor_A1 = 9;
+const int motor_A1 = 9;
 const int motor_A2 = 8;
 const int motor_B1 = 10;
 const int motor_B2 = 11;
