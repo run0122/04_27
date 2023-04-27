@@ -1,4 +1,4 @@
-const int motor_A1 = 9;
+onst int motor_A1 = 9;
 const int motor_A2 = 8;
 const int motor_B1 = 10;
 const int motor_B2 = 11;
@@ -40,6 +40,8 @@ void loop() {
       smooth_left();
     } else if (IR_L_data == 0 and IR_M_data == 1 and IR_R_data == 1) {
       smooth_right();
+    } else if (IR_L_data == 1 and IR_R_data == 1){
+      stop();
     }
   }
 }
@@ -89,45 +91,36 @@ void stop() {
 }
 
 void turn() {
-  millifirstleft(1000);
-  milliforward(1000);
-  milliright(1000);
-  milliforward(1000);
-  milliright(1000);
-  milliforward(1000);
-  millileft(1000);
-  if (IR_L_data == 1 or IR_M_data == 1 or IR_R_data == 1) {
-    stop();  // D신호가 오면 모터를 멈추고 함수 종료
-    return;
-  }
+  millifirstleft(500);
+  milliforward(700);
+  milliright(500);
+  milliforward(700);
+  milliright(500);
+  millilastforward();
+  millileft(500);
 }
 
 void millifirstleft(unsigned long x) {
   unsigned long current_time = millis();
   unsigned long interval = x;
-  while (millis() - current_time < interval) {  // 현재 시간과의 차가 500 밀리초 미만일 때까지 오른쪽으로 회전합니다.
-    hardright();
+  while (millis() - current_time < interval) {
+    hardleft();
   }
 }
 
 void milliright(unsigned long x) {
   unsigned long current_time = millis();
   unsigned long interval = x;
-  while (millis() - current_time < interval) {  // 현재 시간과의 차가 500 밀리초 미만일 때까지 오른쪽으로 회전합니다.
+  while (millis() - current_time < interval) {
     hardright();
-    if (IR_L_data == 1 or IR_M_data == 1 or IR_R_data == 1) {
-      stop();  // D신호가 오면 모터를 멈추고 함수 종료
-      return;
-    }
   }
 }
 void millileft(unsigned long x) {
   unsigned long current_time = millis();
   unsigned long interval = x;
-  while (millis() - current_time < interval) {  // 현재 시간과의 차가 500 밀리초 미만일 때까지 오른쪽으로 회전합니다.
+  while (millis() - current_time < interval) {
     hardleft();
     if (IR_L_data == 1 or IR_M_data == 1 or IR_R_data == 1) {
-      stop();  // D신호가 오면 모터를 멈추고 함수 종료
       return;
     }
   }
@@ -135,12 +128,25 @@ void millileft(unsigned long x) {
 void milliforward(unsigned long x) {
   unsigned long current_time = millis();
   unsigned long interval = x;
-  while (millis() - current_time < interval) {  // 현재 시간과의 차가 500 밀리초 미만일 때까지 오른쪽으로 회전합니다.
+  while (millis() - current_time < interval) {
     hardforward();
-    if (IR_L_data == 1 or IR_M_data == 1 or IR_R_data == 1) {
-      stop();  // D신호가 오면 모터를 멈추고 함수 종료
-      return;
-    }
+  }
+}
+void millilastforward(){
+  forward();
+  if (IR_L_data == 1 or IR_M_data == 1 or IR_R_data == 1) {
+    millilastleft(200);
+  }
+}
+void millilastleft(unsigned long x){
+  unsigned long current_time = millis();
+  unsigned long interval = x;
+  while (millis() - current_time < interval) {
+    hardleft();
+  }
+  hardleft();
+  if (IR_L_data == 1 or IR_M_data == 1 or IR_R_data == 1) {
+    return;
   }
 }
 
