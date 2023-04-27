@@ -11,8 +11,6 @@ int IR_R_data;
 
 char input;
 
-bool is_turned = false;
-
 void setup() {
   pinMode(motor_A1, OUTPUT);
   pinMode(motor_A2, OUTPUT);
@@ -28,23 +26,27 @@ void loop() {
   IR_L_data = digitalRead(IR_L);
   IR_M_data = digitalRead(IR_M);
   IR_R_data = digitalRead(IR_R);
-
+  if (millis() == 5000) {
+    turn();
+  }
   if (Serial.available() > 0) {
     input = Serial.read();
 
     if (IR_L_data == 1 or IR_M_data == 1 or IR_R_data == 1) {
-      if (input == 'D') {  // 보행자가 없을 때는 정상 IR 센서 동작
-        drive();
-      } else if (input == 'T') {  // 보행자가 있을 때는 Turn 함수 호출 -> IR센서 값이 0 0 0
-        turn();
-      }
-    } else if (IR_L_data == 0 and IR_M_data == 0 and IR_R_data == 0 and is_turned == true) {  // 라인을 벗어낫을 때
+      drive();
+    } else if (IR_L_data == 0 and IR_M_data == 0 and IR_R_data == 0) {  // 라인을 벗어낫을 때
       if (input == 'L') {
-        smooth_left();
+        left();
+        delay(50);
+        stop();
       } else if (input == 'R') {
-        smooth_right();
+        right();
+        delay(50);
+        stop();
       } else if (input == 'F') {
-        smooth_forward();
+        forward();
+        delay(50);
+        stop();
       }
     }
   }
@@ -80,7 +82,7 @@ void smooth_left() {
   digitalWrite(motor_B2, LOW);
 }
 
-void smooth_forward(){
+void smooth_forward() {
   analogWrite(motor_A1, 220);
   digitalWrite(motor_A2, LOW);
   analogWrite(motor_B1, 220);
@@ -125,7 +127,6 @@ void turn() {
   milliright(500);
   milliforward(700);
   millileft(200);
-  is_turned = true;
 }
 
 void millifirstleft(unsigned long x) {
@@ -160,13 +161,13 @@ void milliforward(unsigned long x) {
     hardforward();
   }
 }
-void millilastforward(){
+void millilastforward() {
   forward();
   if (IR_L_data == 1 or IR_M_data == 1 or IR_R_data == 1) {
     millilastleft(200);
   }
 }
-void millilastleft(unsigned long x){
+void millilastleft(unsigned long x) {
   unsigned long current_time = millis();
   unsigned long interval = x;
   while (millis() - current_time < interval) {
