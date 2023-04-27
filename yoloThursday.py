@@ -72,7 +72,7 @@ while True:
     height, width, channels = frame.shape
 
     # 하단부 중앙 1/2 영역 추출하기
-    crop_width = int(width / 4)
+    crop_width = int((3 * width) / 8)
     crop_height = int(height / 2)
     start_x = int(width / 2) - crop_width
     start_y = int(height / 2)
@@ -84,7 +84,7 @@ while True:
     gray = cv2.cvtColor(cropped_frame, cv2.COLOR_BGR2GRAY)
 
     # 이미지 이진화하기
-    _, thresh = cv2.threshold(gray, 90, 255, cv2.THRESH_BINARY_INV)
+    _, thresh = cv2.threshold(gray, 60, 255, cv2.THRESH_BINARY_INV)
 
     # 컨투어 찾기
     contours, _ = cv2.findContours(
@@ -94,7 +94,7 @@ while True:
     max_area = 0
     max_contour = None
 
-    min_contour_area = 15000
+    min_contour_area = 5000
 
     for contour in contours:
         area = cv2.contourArea(contour)
@@ -128,7 +128,9 @@ while True:
         ser.write(b'D')
 
     # 프레임 보여주기
-    cv2.imshow("Line Tracer", thresh)
+    cv2.imshow("Line Tracer1", cropped_frame)
+    cv2.imshow("Line Tracer2", gray)
+    cv2.imshow("Line Tracer3", thresh)
 
     # 'q' 키를 눌러 종료합니다.
     if cv2.waitKey(1) == ord('q'):
