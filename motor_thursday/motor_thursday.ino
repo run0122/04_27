@@ -9,6 +9,10 @@ int IR_L_data;
 int IR_M_data;
 int IR_R_data;
 
+const int trigPin = 7;
+const int echoPin = 6;
+
+float duration, distance;
 
 void setup() {
   pinMode(motor_A1, OUTPUT);
@@ -18,6 +22,8 @@ void setup() {
   pinMode(IR_L, INPUT);
   pinMode(IR_M, INPUT);
   pinMode(IR_R, INPUT);
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
 }
 
 
@@ -27,7 +33,16 @@ void loop() {
   IR_M_data = digitalRead(IR_M);
   IR_R_data = digitalRead(IR_R);
 
-  if (millis() == 3000) {
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  duration = pulseIn(echoPin, HIGH);
+  distance = (duration*.0343)/2;
+
+  if (distance < 15) {
     turn();
   } else {
     if (IR_L_data == 0 and IR_M_data == 1 and IR_R_data == 0) {
@@ -96,8 +111,8 @@ void turn() {
   milliright(500);
   milliforward(700);
   milliright(500);
+  milliforward(500);
   millilastforward();
-  millileft(500);
 }
 
 void millifirstleft(unsigned long x) {
@@ -144,7 +159,7 @@ void millilastleft(unsigned long x){
   while (millis() - current_time < interval) {
     hardleft();
   }
-  hardleft();
+  left();
   if (IR_L_data == 1 or IR_M_data == 1 or IR_R_data == 1) {
     return;
   }

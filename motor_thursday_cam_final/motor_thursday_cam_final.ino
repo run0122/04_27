@@ -24,8 +24,7 @@ void setup() {
   pinMode(IR_L, INPUT);
   pinMode(IR_M, INPUT);
   pinMode(IR_R, INPUT);
-  pinMode(trigPin, OUTPUT);
-  pinMode(echoPin, INPUT);
+ 
   Serial.begin(9600);
 }
 
